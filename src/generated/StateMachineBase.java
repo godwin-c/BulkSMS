@@ -206,6 +206,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Container findContainer6(Component root) {
+        return (com.codename1.ui.Container)findByName("Container6", root);
+    }
+
+    public com.codename1.ui.Container findContainer6() {
+        com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("Container6", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Container)findByName("Container6", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Container findContainer5(Component root) {
         return (com.codename1.ui.Container)findByName("Container5", root);
     }
@@ -458,18 +470,6 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
-    public com.codename1.ui.TextField findEmailTextField(Component root) {
-        return (com.codename1.ui.TextField)findByName("emailTextField", root);
-    }
-
-    public com.codename1.ui.TextField findEmailTextField() {
-        com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("emailTextField", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.TextField)findByName("emailTextField", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
     public com.codename1.ui.TextField findGroupSenderTextField(Component root) {
         return (com.codename1.ui.TextField)findByName("groupSenderTextField", root);
     }
@@ -478,6 +478,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("groupSenderTextField", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.TextField)findByName("groupSenderTextField", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.TextField findEmailTextField(Component root) {
+        return (com.codename1.ui.TextField)findByName("emailTextField", root);
+    }
+
+    public com.codename1.ui.TextField findEmailTextField() {
+        com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("emailTextField", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.TextField)findByName("emailTextField", aboutToShowThisContainer);
         }
         return cmp;
     }

@@ -1097,7 +1097,8 @@ public class StateMachine extends StateMachineBase {
                             d.show();
                             showForm("AvaillableGroups", null);//back();
                             // l.setModel(new DefaultListModel(myCoWorkersGroup));
-                            //back();
+                    
+        //back();
                         } catch (Exception e) {
                             Dialog.show("Oh dear!!", "error has occured, trying to remove contact '" + e.getMessage() + "'", "OK", null);
                         }
