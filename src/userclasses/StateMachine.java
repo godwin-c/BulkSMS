@@ -387,7 +387,10 @@ public class StateMachine extends StateMachineBase {
 
                     JSONParser p = new JSONParser();
                     InputStreamReader inp = new InputStreamReader(input);
-                    loggedInUser = p.parse(inp);
+                    Hashtable<String, String> h = new Hashtable<String, String>();
+                    h = p.parse(inp);
+                    numberOfCredit = h.get("credits").toString();
+                  //  loggedInUser = p.parse(inp);
                 }
 
             };
@@ -410,11 +413,11 @@ public class StateMachine extends StateMachineBase {
             manager.start();
             manager.addToQueueAndWait(request);
 
-                if ((status1 != null) && ("200 OK".equals(status1))) {
-                 System.out.println("user logged on : " + loggedInUser.toString());
-                    System.out.println("Session token : "+ bulkSMSUser.getSessionToken());
-                numberOfCredit = loggedInUser.get("credits").toString();
-            }
+//                if ((status1 != null) && ("200 OK".equals(status1))) {
+//                 System.out.println("user logged on : " + loggedInUser.toString());
+//                    System.out.println("Session token : "+ bulkSMSUser.getSessionToken());
+//                numberOfCredit = loggedInUser.get("credits").toString();
+//            }
 
         }
     });
@@ -950,7 +953,7 @@ public class StateMachine extends StateMachineBase {
     }
 
     @Override
-    protected void onGroupDisplay_GroupContactsListAction(Component c, ActionEvent event) {
+    protected void onGroupDisplay_GroupContactsListAction(final Component c, ActionEvent event) {
         final List l = (List) c;
         final Hashtable h = (Hashtable) l.getSelectedItem();
         // System.out.println(h.toString());
@@ -995,14 +998,16 @@ public class StateMachine extends StateMachineBase {
                             txt.setEditable(false);
                             Dialog d = new Dialog();
                             d.addComponent(txt);
-
                             d.setTimeout(800);
                             d.show();
-                            //back();
+                            back();
+                            //c.getComponentForm().showBack();
+                            //showForm("AvaillableGroups", null);//back();
                             //l.setModel(new DefaultListModel(myFamilyGroup));
                         } catch (Exception e) {
                             Dialog.show("Oh dear!!", "error has occured, trying to remove contact '" + e.getMessage() + "'", "OK", null);
                         }
+                       // 
                     }
 
                 } else if ("friends".equals(group)) {
@@ -1119,7 +1124,7 @@ public class StateMachine extends StateMachineBase {
         area.setText("Remove " + "'" + h.get("displayName").toString() + "'" + " from the group?");
         Dialog.show("My groups", area, cmds);
 
-        c.getComponentForm().revalidate();
+       // c.getComponentForm().revalidate();
     }
 
     @Override
@@ -1695,5 +1700,10 @@ public class StateMachine extends StateMachineBase {
     protected void onLoginUser_ResetPasswordButtonAction(Component c, ActionEvent event) {
         ((Dialog) Display.getInstance().getCurrent()).dispose();
         showForm("ResetMyPassword", null);
+    }
+
+    @Override
+    protected void beforeAvaillableGroups(Form f) {
+    
     }
 }
