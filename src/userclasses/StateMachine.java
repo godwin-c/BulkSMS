@@ -390,9 +390,8 @@ public class StateMachine extends StateMachineBase {
                     Hashtable<String, String> h = new Hashtable<String, String>();
                     h = p.parse(inp);
                     numberOfCredit = h.get("credits").toString();
-                  //  loggedInUser = p.parse(inp);
+                    //  loggedInUser = p.parse(inp);
                 }
-
             };
 
 
@@ -1000,14 +999,14 @@ public class StateMachine extends StateMachineBase {
                             d.addComponent(txt);
                             d.setTimeout(800);
                             d.show();
-                            back();
+                            //back();
                             //c.getComponentForm().showBack();
-                            //showForm("AvaillableGroups", null);//back();
+                            showForm("AvaillableGroups", null);//back();
                             //l.setModel(new DefaultListModel(myFamilyGroup));
                         } catch (Exception e) {
                             Dialog.show("Oh dear!!", "error has occured, trying to remove contact '" + e.getMessage() + "'", "OK", null);
                         }
-                       // 
+                        // 
                     }
 
                 } else if ("friends".equals(group)) {
@@ -1051,7 +1050,7 @@ public class StateMachine extends StateMachineBase {
                             //d.addComponent(new Label(""));
                             d.setTimeout(800);
                             d.show();
-                            //back();
+                            showForm("AvaillableGroups", null);//back();
                             //l.setModel(new DefaultListModel(myFriendsGroup));
                         } catch (Exception e) {
                             Dialog.show("Oh dear!!", "error has occured, trying to remove contact '" + e.getMessage() + "'", "OK", null);
@@ -1094,9 +1093,9 @@ public class StateMachine extends StateMachineBase {
                             txt.setEditable(false);
                             Dialog d = new Dialog();
                             d.addComponent(txt);
-
-                            d.setTimeout(800);
+                            d.setTimeout(800);                            
                             d.show();
+                            showForm("AvaillableGroups", null);//back();
                             // l.setModel(new DefaultListModel(myCoWorkersGroup));
                             //back();
                         } catch (Exception e) {
@@ -1124,7 +1123,7 @@ public class StateMachine extends StateMachineBase {
         area.setText("Remove " + "'" + h.get("displayName").toString() + "'" + " from the group?");
         Dialog.show("My groups", area, cmds);
 
-       // c.getComponentForm().revalidate();
+        // c.getComponentForm().revalidate();
     }
 
     @Override
@@ -1704,6 +1703,12 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void beforeAvaillableGroups(Form f) {
-    
+        f.setBackCommand(new Command("Home") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                //super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                showForm("Main", null);
+            }
+        });
     }
 }
