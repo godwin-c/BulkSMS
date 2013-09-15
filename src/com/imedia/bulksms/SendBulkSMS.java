@@ -28,11 +28,11 @@ public class SendBulkSMS {
             ((Dialog) f).dispose();
         }
 
-        current = Display.getInstance().getCurrent();
-        if (current instanceof Dialog) {
-            //((Dialog) current).dispose();
-            current = null;
-        }
+//        current = Display.getInstance().getCurrent();
+//        if (current instanceof Dialog) {
+//            //((Dialog) current).dispose();
+//            current = null;
+//        }
     }
 
     public void destroy() {

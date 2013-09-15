@@ -14,7 +14,10 @@ import com.codename1.io.Util;
 import com.codename1.processing.Result;
 import generated.StateMachineBase;
 import com.codename1.ui.*;
+import com.codename1.ui.animations.CommonTransitions;
 import com.codename1.ui.events.*;
+import com.codename1.ui.layouts.BorderLayout;
+import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.list.DefaultListModel;
 import com.codename1.ui.util.Resources;
 import com.codename1.util.StringUtil;
@@ -561,6 +564,43 @@ public class StateMachine extends StateMachineBase {
         };
 
         f.addCommand(checkMyCredit);
+
+        Command logout = new Command("Logout") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                //super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                //kl
+                if (Storage.getInstance().exists("BulkSMSUser")) {
+                    try {
+                        Storage.getInstance().deleteStorageFile("BulkSMSUser");
+
+                        InfiniteProgress ip = new InfiniteProgress();
+                        //Dialog dlg = ip.showInifiniteBlocking();
+                        Dialog d = new Dialog();
+                        d.setDialogUIID("Container");
+                        d.setLayout(new BorderLayout());
+                        Container cnt = new Container(new BoxLayout(BoxLayout.Y_AXIS));
+                        Label l = new Label("Logging out...");
+                        l.getStyle().getBgTransparency();
+                        cnt.addComponent(l);
+                        cnt.addComponent(ip);
+                        d.addComponent(BorderLayout.CENTER, cnt);
+                        d.setTransitionInAnimator(CommonTransitions.createEmpty());
+                        d.setTransitionOutAnimator(CommonTransitions.createEmpty());
+                        d.showPacked(BorderLayout.CENTER, false);
+                        
+                        d.setTimeout(3000);
+                        d.show();
+                        
+                        showForm("SignUp", null);
+                    } catch (Exception e) {
+                        Dialog.show("Oh dear", e.getMessage(), "OK", null);
+                    }
+                }
+
+            }
+        };
+        f.addCommand(logout);
     }
 
     @Override
@@ -1093,12 +1133,12 @@ public class StateMachine extends StateMachineBase {
                             txt.setEditable(false);
                             Dialog d = new Dialog();
                             d.addComponent(txt);
-                            d.setTimeout(800);                            
+                            d.setTimeout(800);
                             d.show();
                             showForm("AvaillableGroups", null);//back();
                             // l.setModel(new DefaultListModel(myCoWorkersGroup));
-                    
-        //back();
+
+                            //back();
                         } catch (Exception e) {
                             Dialog.show("Oh dear!!", "error has occured, trying to remove contact '" + e.getMessage() + "'", "OK", null);
                         }
