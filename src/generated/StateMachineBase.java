@@ -338,18 +338,6 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
-    public com.codename1.ui.TextField findEmailToReset(Component root) {
-        return (com.codename1.ui.TextField)findByName("emailToReset", root);
-    }
-
-    public com.codename1.ui.TextField findEmailToReset() {
-        com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("emailToReset", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.TextField)findByName("emailToReset", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
     public com.codename1.ui.TextArea findGroupSMSTextArea(Component root) {
         return (com.codename1.ui.TextArea)findByName("groupSMSTextArea", root);
     }
@@ -358,6 +346,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.TextArea cmp = (com.codename1.ui.TextArea)findByName("groupSMSTextArea", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.TextArea)findByName("groupSMSTextArea", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.TextField findEmailToReset(Component root) {
+        return (com.codename1.ui.TextField)findByName("emailToReset", root);
+    }
+
+    public com.codename1.ui.TextField findEmailToReset() {
+        com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("emailToReset", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.TextField)findByName("emailToReset", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -418,6 +418,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.TextArea cmp = (com.codename1.ui.TextArea)findByName("infoTextArea", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.TextArea)findByName("infoTextArea", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Button findAddNumbersButton(Component root) {
+        return (com.codename1.ui.Button)findByName("addNumbersButton", root);
+    }
+
+    public com.codename1.ui.Button findAddNumbersButton() {
+        com.codename1.ui.Button cmp = (com.codename1.ui.Button)findByName("addNumbersButton", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Button)findByName("addNumbersButton", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -1641,6 +1653,10 @@ public abstract class StateMachineBase extends UIBuilder {
                 onMain_NumbersToSendSMSTextAreaAction(c, event);
                 return;
             }
+            if("addNumbersButton".equals(c.getName())) {
+                onMain_AddNumbersButtonAction(c, event);
+                return;
+            }
             if("smsSenderTextField".equals(c.getName())) {
                 onMain_SmsSenderTextFieldAction(c, event);
                 return;
@@ -1755,6 +1771,9 @@ public abstract class StateMachineBase extends UIBuilder {
       }
 
       protected void onMain_NumbersToSendSMSTextAreaAction(Component c, ActionEvent event) {
+      }
+
+      protected void onMain_AddNumbersButtonAction(Component c, ActionEvent event) {
       }
 
       protected void onMain_SmsSenderTextFieldAction(Component c, ActionEvent event) {

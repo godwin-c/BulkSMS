@@ -570,33 +570,34 @@ public class StateMachine extends StateMachineBase {
             public void actionPerformed(ActionEvent evt) {
                 //super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
                 //kl
+                InfiniteProgress ip = new InfiniteProgress();
+                //Dialog dlg = ip.showInifiniteBlocking();
+                Dialog d = new Dialog();
+                d.setDialogUIID("Container");
+                d.setLayout(new BorderLayout());
+                Container cnt = new Container(new BoxLayout(BoxLayout.Y_AXIS));
+                Label l = new Label("Logging out...");
+                l.getStyle().getBgTransparency();
+                cnt.addComponent(l);
+                cnt.addComponent(ip);
+                d.addComponent(BorderLayout.CENTER, cnt);
+                d.setTransitionInAnimator(CommonTransitions.createEmpty());
+                d.setTransitionOutAnimator(CommonTransitions.createEmpty());
+                d.showPacked(BorderLayout.CENTER, false);
+
+                d.setTimeout(3000);
+                d.show();
+                
                 if (Storage.getInstance().exists("BulkSMSUser")) {
                     try {
                         Storage.getInstance().deleteStorageFile("BulkSMSUser");
 
-                        InfiniteProgress ip = new InfiniteProgress();
-                        //Dialog dlg = ip.showInifiniteBlocking();
-                        Dialog d = new Dialog();
-                        d.setDialogUIID("Container");
-                        d.setLayout(new BorderLayout());
-                        Container cnt = new Container(new BoxLayout(BoxLayout.Y_AXIS));
-                        Label l = new Label("Logging out...");
-                        l.getStyle().getBgTransparency();
-                        cnt.addComponent(l);
-                        cnt.addComponent(ip);
-                        d.addComponent(BorderLayout.CENTER, cnt);
-                        d.setTransitionInAnimator(CommonTransitions.createEmpty());
-                        d.setTransitionOutAnimator(CommonTransitions.createEmpty());
-                        d.showPacked(BorderLayout.CENTER, false);
                         
-                        d.setTimeout(3000);
-                        d.show();
-                        
-                        showForm("SignUp", null);
                     } catch (Exception e) {
                         Dialog.show("Oh dear", e.getMessage(), "OK", null);
                     }
                 }
+                showForm("SignUp", null);
 
             }
         };
@@ -1751,5 +1752,11 @@ public class StateMachine extends StateMachineBase {
                 showForm("Main", null);
             }
         });
+    }
+
+    @Override
+    protected void onMain_AddNumbersButtonAction(Component c, ActionEvent event) {
+
+    
     }
 }
