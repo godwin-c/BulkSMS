@@ -42,10 +42,12 @@ public class StateMachine extends StateMachineBase {
     Vector<Hashtable> myFamilyGroup;
     Vector<Hashtable> myFriendsGroup;
     Vector<Hashtable> myCoWorkersGroup;
+    Vector<Hashtable> mainSMScontacts;
     Vector<Hashtable> userList;
     Hashtable<String, String> userInfo;
     Hashtable loggedInUser;
     Vector<String> phoneNumbers;
+    Vector<String> smsNumbers;
     BulkSMSUsers bulkSMSUser;
     private String myAppId;
     private String resApiKey;
@@ -489,7 +491,7 @@ public class StateMachine extends StateMachineBase {
     }
 
     @Override
-    protected void beforeMain(Form f) {
+    protected void beforeMain(final Form f) {
 
         //Storage.getInstance().clearStorage();
         //Vector<Hashtable> vector = ContactsManager.getAllContacts();
@@ -570,38 +572,59 @@ public class StateMachine extends StateMachineBase {
             public void actionPerformed(ActionEvent evt) {
                 //super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
                 //kl
-                InfiniteProgress ip = new InfiniteProgress();
-                //Dialog dlg = ip.showInifiniteBlocking();
-                Dialog d = new Dialog();
-                d.setDialogUIID("Container");
-                d.setLayout(new BorderLayout());
-                Container cnt = new Container(new BoxLayout(BoxLayout.Y_AXIS));
-                Label l = new Label("Logging out...");
-                l.getStyle().getBgTransparency();
-                cnt.addComponent(l);
-                cnt.addComponent(ip);
-                d.addComponent(BorderLayout.CENTER, cnt);
-                d.setTransitionInAnimator(CommonTransitions.createEmpty());
-                d.setTransitionOutAnimator(CommonTransitions.createEmpty());
-                d.showPacked(BorderLayout.CENTER, false);
+//                InfiniteProgress ip = new InfiniteProgress();
+//                //Dialog dlg = ip.showInifiniteBlocking();
+//                Dialog d = new Dialog();
+//                d.setDialogUIID("Container");
+//                d.setLayout(new BorderLayout());
+//                Container cnt = new Container(new BoxLayout(BoxLayout.Y_AXIS));
+//                Label l = new Label("Logging out...");
+//                l.getStyle().getBgTransparency();
+//                cnt.addComponent(l);
+//                cnt.addComponent(ip);
+//                d.addComponent(BorderLayout.CENTER, cnt);
+//                d.setTransitionInAnimator(CommonTransitions.createEmpty());
+//                d.setTransitionOutAnimator(CommonTransitions.createEmpty());
+//                d.showPacked(BorderLayout.CENTER, false);
 
+                TextArea txt = new TextArea();
+                txt.setText("Logging out....");
+                txt.setEditable(false);
+                Dialog d = new Dialog();
+                d.setLayout(new BorderLayout());
+                d.setTitle("please wait");
+                d.addComponent(BorderLayout.CENTER,txt);
                 d.setTimeout(3000);
-                d.show();
-                
+                d.show();               
+
                 if (Storage.getInstance().exists("BulkSMSUser")) {
                     try {
                         Storage.getInstance().deleteStorageFile("BulkSMSUser");
 
-                        
+
                     } catch (Exception e) {
                         Dialog.show("Oh dear", e.getMessage(), "OK", null);
                     }
                 }
-                showForm("SignUp", null);
+                
+               // f.setBackCommand(this);
+                Display.getInstance().exitApplication();
 
             }
         };
         f.addCommand(logout);
+
+
+        String num = "";
+        //num = "";
+        if (mainSMScontacts != null) {
+            for (int i = 0; i < mainSMScontacts.size(); i++) {
+                Hashtable hashtable = mainSMScontacts.elementAt(i);
+                num = num + hashtable.get("phone").toString() + ",";
+            }
+            findNumbersToSendSMSTextArea(f).setText(num);
+        }
+
     }
 
     @Override
@@ -739,6 +762,31 @@ public class StateMachine extends StateMachineBase {
                     }
 
 
+                } else if ("main".equals(group)) {
+
+                    if (mainSMScontacts == null) {
+                        mainSMScontacts = new Vector<Hashtable>();
+                        //showForm("GroupDisplay", null);
+                    }
+
+                    try {
+                        Hashtable h2 = new Hashtable();
+                        //h2.put("displayName", h.get("displayName").toString());
+                        h2.put("phone", h.get("phone").toString());
+
+                        mainSMScontacts.add(h2);
+                        TextArea txt = new TextArea();
+                        txt.setText("contact added");
+                        txt.setEditable(false);
+                        Dialog d = new Dialog();
+                        d.addComponent(txt);
+                        d.setTimeout(800);
+                        d.show();
+
+                    } catch (Exception e) {
+                        Dialog.show("oh dear", "contact selected has no phone number and cannot be added", "OK", null);
+                    }
+
                 } else {
                     Dialog.show("Oh dear!!", "what happened?", "OK", null);
                 }
@@ -755,7 +803,13 @@ public class StateMachine extends StateMachineBase {
         TextArea area = new TextArea();
         //area.setUIID("VKBtooltip");
         area.setEditable(false);
-        area.setText("Add " + "'" + h.get("displayName").toString() + "'" + " to the group?");
+        String str;
+        if ((h.get("displayName").toString() == null) || ("".equals(h.get("displayName").toString()))) {
+            str = "UnKnown";
+        } else {
+            str = h.get("displayName").toString();
+        }
+        area.setText("Add " + "'" + str + "'" + " to the group?");
         Dialog.show("My groups", area, cmds);
     }
 
@@ -1673,6 +1727,16 @@ public class StateMachine extends StateMachineBase {
                 Display.getInstance().exitApplication();
             }
         });
+        
+        f.setBackCommand(new Command("Close"){
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                //super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                Display.getInstance().exitApplication();
+            }
+            
+        });
     }
 
     @Override
@@ -1756,7 +1820,28 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void onMain_AddNumbersButtonAction(Component c, ActionEvent event) {
-
-    
+        group = "main";
+        showForm("PhoneContacts", null);
     }
+//    @Override
+//    protected boolean initListModelSmsContactsList(List cmp) {
+//        String[] contactsId = ContactsManager.getAllContactsWithNumbers();
+//        cmp.setModel(new ContactsModel(contactsId));
+//        return true;
+//    }
+//
+//    @Override
+//    protected void beforeContactsList(Form f) {
+//    }
+//
+//    @Override
+//    protected void onContactsList_DoneButtonAction(Component c, ActionEvent event) {
+//        ((Dialog) Display.getInstance().getCurrent()).dispose();
+//    }
+//
+//    @Override
+//    protected void onContactsList_SmsContactsListAction(Component c, ActionEvent event) {
+//        final List l = (List) c;
+//        final Hashtable h = (Hashtable) l.getSelectedItem();
+//    }
 }
