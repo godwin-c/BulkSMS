@@ -1705,16 +1705,16 @@ public abstract class StateMachineBase extends UIBuilder {
             }
         }
         if(rootContainerName.equals("InformationForm")) {
-            if("firstTextArea".equals(c.getName())) {
-                onInformationForm_FirstTextAreaAction(c, event);
-                return;
-            }
             if("infoTextArea".equals(c.getName())) {
                 onInformationForm_InfoTextAreaAction(c, event);
                 return;
             }
             if("infoNumbersTextArea".equals(c.getName())) {
                 onInformationForm_InfoNumbersTextAreaAction(c, event);
+                return;
+            }
+            if("firstTextArea".equals(c.getName())) {
+                onInformationForm_FirstTextAreaAction(c, event);
                 return;
             }
         }
@@ -1806,13 +1806,13 @@ public abstract class StateMachineBase extends UIBuilder {
       protected void onGroupDisplay_GroupContactsListAction(Component c, ActionEvent event) {
       }
 
-      protected void onInformationForm_FirstTextAreaAction(Component c, ActionEvent event) {
-      }
-
       protected void onInformationForm_InfoTextAreaAction(Component c, ActionEvent event) {
       }
 
       protected void onInformationForm_InfoNumbersTextAreaAction(Component c, ActionEvent event) {
+      }
+
+      protected void onInformationForm_FirstTextAreaAction(Component c, ActionEvent event) {
       }
 
       protected void onSMStoGroup_GroupSMSTextAreaAction(Component c, ActionEvent event) {
