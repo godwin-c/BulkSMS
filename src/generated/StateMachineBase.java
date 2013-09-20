@@ -122,18 +122,6 @@ public abstract class StateMachineBase extends UIBuilder {
         this(res, null, loadTheme);
     }
 
-    public com.codename1.ui.TextField findSmsUsername(Component root) {
-        return (com.codename1.ui.TextField)findByName("smsUsername", root);
-    }
-
-    public com.codename1.ui.TextField findSmsUsername() {
-        com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("smsUsername", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.TextField)findByName("smsUsername", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
     public com.codename1.ui.Container findContainer4(Component root) {
         return (com.codename1.ui.Container)findByName("Container4", root);
     }
@@ -142,6 +130,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("Container4", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.Container)findByName("Container4", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.TextField findSmsUsername(Component root) {
+        return (com.codename1.ui.TextField)findByName("smsUsername", root);
+    }
+
+    public com.codename1.ui.TextField findSmsUsername() {
+        com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("smsUsername", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.TextField)findByName("smsUsername", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -1645,6 +1645,10 @@ public abstract class StateMachineBase extends UIBuilder {
             }
         }
         if(rootContainerName.equals("Main")) {
+            if("sendSMSButton".equals(c.getName())) {
+                onMain_SendSMSButtonAction(c, event);
+                return;
+            }
             if("smsToSendTextArea".equals(c.getName())) {
                 onMain_SmsToSendTextAreaAction(c, event);
                 return;
@@ -1659,10 +1663,6 @@ public abstract class StateMachineBase extends UIBuilder {
             }
             if("smsSenderTextField".equals(c.getName())) {
                 onMain_SmsSenderTextFieldAction(c, event);
-                return;
-            }
-            if("sendSMSButton".equals(c.getName())) {
-                onMain_SendSMSButtonAction(c, event);
                 return;
             }
         }
@@ -1767,6 +1767,9 @@ public abstract class StateMachineBase extends UIBuilder {
       protected void onLoginUser_ResetPasswordButtonAction(Component c, ActionEvent event) {
       }
 
+      protected void onMain_SendSMSButtonAction(Component c, ActionEvent event) {
+      }
+
       protected void onMain_SmsToSendTextAreaAction(Component c, ActionEvent event) {
       }
 
@@ -1777,9 +1780,6 @@ public abstract class StateMachineBase extends UIBuilder {
       }
 
       protected void onMain_SmsSenderTextFieldAction(Component c, ActionEvent event) {
-      }
-
-      protected void onMain_SendSMSButtonAction(Component c, ActionEvent event) {
       }
 
       protected void onPhoneContacts_PhoneContactsListAction(Component c, ActionEvent event) {

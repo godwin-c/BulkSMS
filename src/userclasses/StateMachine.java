@@ -572,7 +572,7 @@ public class StateMachine extends StateMachineBase {
             public void actionPerformed(ActionEvent evt) {
                 //super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
                 //kl
-//                InfiniteProgress ip = new InfiniteProgress();
+                InfiniteProgress ip = new InfiniteProgress();
 //                //Dialog dlg = ip.showInifiniteBlocking();
 //                Dialog d = new Dialog();
 //                d.setDialogUIID("Container");
@@ -590,11 +590,13 @@ public class StateMachine extends StateMachineBase {
                 TextArea txt = new TextArea();
                 txt.setText("Logging out....");
                 txt.setEditable(false);
+                txt.setUIID("Label");
                 Dialog d = new Dialog();
                 d.setLayout(new BorderLayout());
                 d.setTitle("please wait");
                 d.addComponent(BorderLayout.CENTER,txt);
-                d.setTimeout(3000);
+                d.addComponent(BorderLayout.EAST,ip);
+                d.setTimeout(4000);
                 d.show();               
 
                 if (Storage.getInstance().exists("BulkSMSUser")) {
