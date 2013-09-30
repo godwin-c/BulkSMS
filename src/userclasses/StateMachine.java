@@ -53,6 +53,7 @@ public class StateMachine extends StateMachineBase {
     private String smsResponse;
     private String smsToSend;
     private String numberOfCredit;
+     int clickTimes;
 
     public StateMachine(String resFile) {
         super(resFile);
@@ -68,6 +69,7 @@ public class StateMachine extends StateMachineBase {
     protected void initVars(Resources res) {
         myAppId = "sarqGjcQUJdsLvj87hvGR5yIUxQvperLwDqs7Dav";
         resApiKey = "x9G5apUmyKronu8vsEph94vMTfWQUFnJ965eGTS3";
+        clickTimes = 0;
     }
 
     public void registerAppUser(String username, String password, String email) {
@@ -489,7 +491,7 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void beforeMain(final Form f) {
-
+       
         //Storage.getInstance().clearStorage();
         //Vector<Hashtable> vector = ContactsManager.getAllContacts();
 //        if (numberOfCredit == null) {
@@ -535,6 +537,7 @@ public class StateMachine extends StateMachineBase {
         Command checkMyCredit = new Command("Check my Credit") {
             @Override
             public void actionPerformed(ActionEvent evt) {
+                
                 //super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
                 if ((numberOfCredit == null) || ("".trim().equals(numberOfCredit))) {
                     checkMyCredit();
@@ -557,7 +560,32 @@ public class StateMachine extends StateMachineBase {
                         Dialog.show("My Credit", "you have " + numberOfCredit + " units of credit left. On how to purchase more, go to information section", "OK", null);
                     }
                 } else {
-                    Dialog.show("My Credit", "you have " + numberOfCredit + " units of credit left.On how to purchase more, go to information section", "OK", null);
+                    clickTimes += 1;
+                    if (clickTimes == 2) {
+                        checkMyCredit();
+                        if ((status == null) || (!"200 OK".equals(status))) {
+//                        for (int i = 0; i < userList.size(); i++) {
+//                            Hashtable hashtable = userList.elementAt(i);
+//                            
+//
+//                        }
+                            Dialog d = new Dialog("Internet connection");
+                            TextArea txt = new TextArea();
+                            txt.setText("you may not be connected to the internet");
+                            txt.setEditable(false);
+                            d.addComponent(txt);
+                            d.setTimeout(1000);
+                            d.show();
+
+                        } else {
+                            numberOfCredit = loggedInUser.get("credits").toString();
+                            Dialog.show("My Credit", "you have " + numberOfCredit + " units of credit left. On how to purchase more, go to information section", "OK", null);
+                        }
+                        clickTimes = 0;
+                    } else {
+                        Dialog.show("My Credit", "you have " + numberOfCredit + " units of credit left.On how to purchase more, go to information section", "OK", null);
+                    }
+
                 }
             }
         };
@@ -591,10 +619,10 @@ public class StateMachine extends StateMachineBase {
                 Dialog d = new Dialog();
                 d.setLayout(new BorderLayout());
                 d.setTitle("please wait");
-                d.addComponent(BorderLayout.CENTER,txt);
-                d.addComponent(BorderLayout.EAST,ip);
+                d.addComponent(BorderLayout.CENTER, txt);
+                d.addComponent(BorderLayout.EAST, ip);
                 d.setTimeout(4000);
-                d.show();               
+                d.show();
 
                 if (Storage.getInstance().exists("BulkSMSUser")) {
                     try {
@@ -605,8 +633,8 @@ public class StateMachine extends StateMachineBase {
                         Dialog.show("Oh dear", e.getMessage(), "OK", null);
                     }
                 }
-                
-               // f.setBackCommand(this);
+
+                // f.setBackCommand(this);
                 Display.getInstance().exitApplication();
 
             }
@@ -1726,15 +1754,13 @@ public class StateMachine extends StateMachineBase {
                 Display.getInstance().exitApplication();
             }
         });
-        
-        f.setBackCommand(new Command("Close"){
 
+        f.setBackCommand(new Command("Close") {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
                 Display.getInstance().exitApplication();
             }
-            
         });
     }
 
