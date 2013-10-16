@@ -147,14 +147,14 @@ public class StateMachine extends StateMachineBase {
         manager.addToQueueAndWait(request);
     }
 
-    private String encodePWD(String password) {
-//        String text = com.codename1.util.Base64.encode(password.getBytes());
-//        String pwd = com.codename1.util.Base64.encode(text.getBytes());
-        GodwinEncrypt encryptMyPassword = new GodwinEncrypt(password);
-        String myEncryptedPassword = encryptMyPassword.asHex();
-
-        return myEncryptedPassword;
-    }
+//    private String encodePWD(String password) {
+////        String text = com.codename1.util.Base64.encode(password.getBytes());
+////        String pwd = com.codename1.util.Base64.encode(text.getBytes());
+//        GodwinEncrypt encryptMyPassword = new GodwinEncrypt(password);
+//        String myEncryptedPassword = encryptMyPassword.asHex();
+//
+//        return myEncryptedPassword;
+//    }
 
     private void userLogin(String username, String password) {
 
@@ -1314,7 +1314,8 @@ public class StateMachine extends StateMachineBase {
             if ((email.indexOf("@") < 0) || (email.indexOf(".", email.indexOf("@")) < 0)) {
                 Dialog.show("Email", "invalid email format", "OK", null);
             } else {
-                if (encodePWD(pasword).equals(encodePWD(confirmPassword))) {
+                //if (encodePWD(pasword).equals(encodePWD(confirmPassword))) {
+                if (pasword.equals(confirmPassword)) {
 
                     searchFor(username.toLowerCase(), email);
                     if ((status != null) && ("200 OK".equals(status))) {
@@ -1330,14 +1331,14 @@ public class StateMachine extends StateMachineBase {
 //                        dlg.setTimeout(3000);
 //                        dlg.show();
                         } else {
-                            registerAppUser(username.toLowerCase(), encodePWD(pasword), email);
+                            registerAppUser(username.toLowerCase(), pasword, email);
 
                             if ((status != null) && ("201 Created".equals(status))) {
 
 
                                 Hashtable h = new Hashtable();
                                 h.put("username", username);
-                                h.put("password", encodePWD(pasword));
+                                h.put("password", pasword);
                                 h.put("objectId", userInfo.get("objectId").toString());
                                 h.put("sessionString", userInfo.get("sessionString").toString());
                                 h.put("email", email);
@@ -1778,14 +1779,14 @@ public class StateMachine extends StateMachineBase {
         String username = findSmsUsername(c.getComponentForm()).getText();
         String pwd = findSmsPassword(c.getComponentForm()).getText();
 
-        userLogin(username.toLowerCase(), encodePWD(pwd));
+        userLogin(username.toLowerCase(), pwd);
         if ((status == null) || (!"200 OK".equals(status))) {
             // ((Dialog) Display.getInstance().getCurrent()).dispose();
             Dialog.show("user login", "please check your login details", "OK", null);
             //noInternet();
         } else {
             Dialog.show("user login", "welcome back '" + username + "', we missed you", "OK", null);
-            loggedInUser.put("password", encodePWD(pwd));
+            loggedInUser.put("password", pwd);
             try {
                 Storage.getInstance().writeObject("BulkSMSUser", loggedInUser);
                 ((Dialog) Display.getInstance().getCurrent()).dispose();
