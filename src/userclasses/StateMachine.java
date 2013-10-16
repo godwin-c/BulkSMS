@@ -20,6 +20,7 @@ import com.codename1.ui.list.DefaultListModel;
 import com.codename1.ui.util.Resources;
 import com.codename1.util.StringUtil;
 import com.imedia.bulksms.BulkSMSUsers;
+import com.imedia.bulksms.GodwinEncrypt;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -53,7 +54,7 @@ public class StateMachine extends StateMachineBase {
     private String smsResponse;
     private String smsToSend;
     private String numberOfCredit;
-     int clickTimes;
+    int clickTimes;
 
     public StateMachine(String resFile) {
         super(resFile);
@@ -147,10 +148,12 @@ public class StateMachine extends StateMachineBase {
     }
 
     private String encodePWD(String password) {
-        String text = com.codename1.util.Base64.encode(password.getBytes());
-        String pwd = com.codename1.util.Base64.encode(text.getBytes());
+//        String text = com.codename1.util.Base64.encode(password.getBytes());
+//        String pwd = com.codename1.util.Base64.encode(text.getBytes());
+        GodwinEncrypt encryptMyPassword = new GodwinEncrypt(password);
+        String myEncryptedPassword = encryptMyPassword.asHex();
 
-        return pwd;
+        return myEncryptedPassword;
     }
 
     private void userLogin(String username, String password) {
@@ -491,7 +494,7 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void beforeMain(final Form f) {
-       
+
         //Storage.getInstance().clearStorage();
         //Vector<Hashtable> vector = ContactsManager.getAllContacts();
 //        if (numberOfCredit == null) {
@@ -537,7 +540,7 @@ public class StateMachine extends StateMachineBase {
         Command checkMyCredit = new Command("Check my Credit") {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                
+
                 //super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
                 if ((numberOfCredit == null) || ("".trim().equals(numberOfCredit))) {
                     checkMyCredit();
@@ -852,7 +855,7 @@ public class StateMachine extends StateMachineBase {
             txt.setEditable(false);
             Dialog dlg = new Dialog();
             dlg.addComponent(txt);
-            dlg.setTimeout(800);
+            dlg.setTimeout(1000);
             dlg.show();
             showForm("PhoneContacts", null);
         }
@@ -870,7 +873,7 @@ public class StateMachine extends StateMachineBase {
             txt.setEditable(false);
             Dialog dlg = new Dialog();
             dlg.addComponent(txt);
-            dlg.setTimeout(800);
+            dlg.setTimeout(1000);
             dlg.show();
             showForm("PhoneContacts", null);
         }
@@ -889,7 +892,7 @@ public class StateMachine extends StateMachineBase {
             txt.setEditable(false);
             Dialog dlg = new Dialog();
             dlg.addComponent(txt);
-            dlg.setTimeout(800);
+            dlg.setTimeout(1000);
             dlg.show();
             showForm("PhoneContacts", null);
         }
