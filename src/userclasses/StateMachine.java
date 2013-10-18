@@ -55,6 +55,7 @@ public class StateMachine extends StateMachineBase {
     private String smsToSend;
     private String numberOfCredit;
     int clickTimes;
+    int smsCount;
 
     public StateMachine(String resFile) {
         super(resFile);
@@ -71,6 +72,7 @@ public class StateMachine extends StateMachineBase {
         myAppId = "sarqGjcQUJdsLvj87hvGR5yIUxQvperLwDqs7Dav";
         resApiKey = "x9G5apUmyKronu8vsEph94vMTfWQUFnJ965eGTS3";
         clickTimes = 0;
+        smsCount = 0;
     }
 
     public void registerAppUser(String username, String password, String email) {
@@ -155,7 +157,6 @@ public class StateMachine extends StateMachineBase {
 //
 //        return myEncryptedPassword;
 //    }
-
     private void userLogin(String username, String password) {
 
         final ConnectionRequest request = new ConnectionRequest() {
@@ -1019,7 +1020,7 @@ public class StateMachine extends StateMachineBase {
 
                             smsToSend = smsForGroup;
 
-
+                            smsCount += 1;
 
                             if ("".trim().equals(sender)) {
                                 bulkSMSUser = new BulkSMSUsers(h.get("username").toString(), h.get("password").toString(), h.get("objectId").toString(), h.get("sessionString").toString(), h.get("email").toString());
@@ -1028,7 +1029,9 @@ public class StateMachine extends StateMachineBase {
                                 cmds[0] = new Command("yes") {
                                     @Override
                                     public void actionPerformed(ActionEvent evt) {
+                                        Thread thread = new Thread(new smsClassToSend(), "thread" + String.valueOf(smsCount));
                                         thread.start();
+
                                         TextArea txt = new TextArea();
                                         txt.setText("your message is queued for sending");
                                         txt.setEditable(false);
@@ -1054,6 +1057,8 @@ public class StateMachine extends StateMachineBase {
                                 Dialog.show("Please Confirm", area, cmds);
                             } else {
                                 bulkSMSUser = new BulkSMSUsers(sender, h.get("password").toString(), h.get("objectId").toString(), h.get("sessionString").toString(), h.get("email").toString());
+
+                                Thread thread = new Thread(new smsClassToSend(), "thread" + String.valueOf(smsCount));
                                 thread.start();
 
                                 TextArea txt = new TextArea();
@@ -1384,10 +1389,21 @@ public class StateMachine extends StateMachineBase {
 
         }
     }
-    Thread thread = new Thread(new Runnable() {
-        final Vector<String> smsSent = new Vector<String>();
+
+    class smsClassToSend implements Runnable {
+
+        Thread runner;
+
+        public smsClassToSend() {
+        }
+
+        public smsClassToSend(String smsName) {
+            runner = new Thread(this, smsName);
+            runner.start();
+        }
 
         public void run() {
+            final Vector<String> smsSent = new Vector<String>();
 
             for (int i = 0; i < phoneNumbers.size(); i++) {
                 String string = phoneNumbers.elementAt(i);
@@ -1512,7 +1528,136 @@ public class StateMachine extends StateMachineBase {
             }
 
         }
-    });
+    }
+//    Thread thread = new Thread(new Runnable() {
+//        final Vector<String> smsSent = new Vector<String>();
+//
+//        public void run() {
+//
+//            for (int i = 0; i < phoneNumbers.size(); i++) {
+//                String string = phoneNumbers.elementAt(i);
+//                if (string.startsWith("0")) {
+//                    string = "234" + string.substring(1);
+//                } else if (string.startsWith("+")) {
+//                    string = string.substring(1);
+//                }
+//
+//                final String number = string;
+//
+//                final ConnectionRequest request = new ConnectionRequest() {
+//                    // **************** Get the status of the connection        
+//                    @Override
+//                    protected void readHeaders(Object connection) throws IOException {
+//                        //status = getHeader(connection, "status");
+//                        // System.out.println("The status of the connection: " + status);
+//                    }
+//                    //*****************
+//
+//                    @Override
+//                    protected void readResponse(InputStream input) throws IOException {
+//                        status = String.valueOf(getResponseCode());
+//                        JSONParser p = new JSONParser();
+//                        InputStreamReader inp = new InputStreamReader(input);
+//                        Hashtable h = p.parse(inp);
+//
+//                        //final Vector v = (Vector) h.get("results");
+//                        //System.out.println("--------------------------------------------------");
+//                        //contactList.clear();
+//                        smsResponse = (String) h.get("result");
+//                        //String txt = new String();
+//
+//                        // System.out.println(smsResponse);
+//                        //System.out.println(smsResponse.substring(0, 27));
+//
+//                    }
+//
+//                    @Override
+//                    protected void postResponse() {
+//                        // super.postResponse(); //To change body of generated methods, choose Tools | Templates.
+//                        if ("200".equals(status)) {
+//                            smsSent.add(number);
+//
+//                        }
+//
+//                    }
+//                };
+//
+//                String url = "http://107.20.195.151/mcast_ws_v2/index.php?user=godwin_agada&password=gochech123&from=" + Util.encodeUrl(bulkSMSUser.getUsername()) + "&to=" + number + "&message=" + Util.encodeUrl(smsToSend) + "&type=json";
+//                request.setUrl(url);
+//                request.setFailSilently(true);//stops user from seeing error message on failure
+//                request.setPost(false);
+//                request.setDuplicateSupported(true);
+//                //request.setDisposeOnCompletion(dlg);
+//
+//                NetworkManager manager = NetworkManager.getInstance();
+//                manager.start();
+//                manager.addToQueueAndWait(request);
+//            }
+//
+//
+//
+//            if (smsSent.size() > 0) {
+//                numberOfCredit = String.valueOf((Integer.valueOf(numberOfCredit)) - (smsSent.size()));
+////                int num;
+////                num = (Integer.valueOf(numberOfCredit) - );
+//                Hashtable h = new Hashtable();
+//                h.put("credits", numberOfCredit);
+//
+//                final String json = Result.fromContent(h).toString();
+//
+//                final ConnectionRequest request = new ConnectionRequest() {
+//                    @Override
+//                    protected void buildRequestBody(OutputStream os) throws IOException {
+//                        os.write(json.getBytes("UTF-8"));
+//                    }
+//
+//                    // **************** Get the status of the connection        
+//                    @Override
+//                    protected void readHeaders(Object connection) throws IOException {
+//                        status = getHeader(connection, "status");
+////                System.out.println("The status of the connection: " + status);
+////                System.out.println(connection.toString());
+//                    }
+//                    //*****************
+//
+//                    @Override
+//                    protected void readResponse(InputStream input) throws IOException {
+//                        //status = String.valueOf(getResposeCode());
+//
+//                        // offlineTellerResponse = Result.fromContent(input, Result.XML);
+//                        //Header(connection, "status");
+//                        JSONParser p = new JSONParser();
+//                        InputStreamReader inp = new InputStreamReader(input);
+//                        Hashtable h = p.parse(inp);
+//
+////                System.out.println("--------------------After Saving the Contact------------------------------");
+////
+////                System.out.println(h.toString());
+//
+//                    }
+//                };
+//
+//
+//
+//                final NetworkManager manager = NetworkManager.getInstance();
+//
+//                String url = "https://api.parse.com/1/users/" + bulkSMSUser.getObjectId();
+//                request.setUrl(url);
+//                request.setContentType("application/json");
+//                request.addRequestHeader("X-Parse-Application-Id", myAppId);
+//                request.addRequestHeader("X-Parse-REST-API-Key", resApiKey);
+//                request.addRequestHeader("X-Parse-Session-Token", bulkSMSUser.getSessionToken());
+//                request.setFailSilently(true);//stops user from seeing error message on failure
+//                request.setPost(true);
+//                request.setHttpMethod("PUT");
+//                request.setDuplicateSupported(true);
+//
+//                manager.start();
+//                manager.addToQueueAndWait(request);
+//            }
+//
+//        }
+//    });
 
     @Override
     protected void onMain_SendSMSButtonAction(Component c, ActionEvent event) {
@@ -1542,7 +1687,7 @@ public class StateMachine extends StateMachineBase {
 
                     smsToSend = sms;
 
-
+                    smsCount += 1;
 
                     if ("".trim().equals(sender)) {
                         bulkSMSUser = new BulkSMSUsers(h.get("username").toString(), h.get("password").toString(), h.get("objectId").toString(), h.get("sessionString").toString(), h.get("email").toString());
@@ -1551,7 +1696,9 @@ public class StateMachine extends StateMachineBase {
                         cmds[0] = new Command("yes") {
                             @Override
                             public void actionPerformed(ActionEvent evt) {
+                                Thread thread = new Thread(new smsClassToSend(), "thread" + String.valueOf(smsCount));
                                 thread.start();
+
                                 TextArea txt = new TextArea();
                                 txt.setText("your message is queued for sending");
                                 txt.setEditable(false);
@@ -1577,7 +1724,11 @@ public class StateMachine extends StateMachineBase {
                         Dialog.show("Please Confirm", area, cmds);
                     } else {
                         bulkSMSUser = new BulkSMSUsers(sender, h.get("password").toString(), h.get("objectId").toString(), h.get("sessionString").toString(), h.get("email").toString());
+
+                        Thread thread = new Thread(new smsClassToSend(), "thread" + String.valueOf(smsCount));
                         thread.start();
+
+                        //thread.start();
 
                         TextArea txt = new TextArea();
                         txt.setText("your message is queued for sending");
@@ -1693,7 +1844,7 @@ public class StateMachine extends StateMachineBase {
 
                     smsToSend = smsForGroup;
 
-
+                    smsCount += 1;
 
                     if ("".trim().equals(sender)) {
                         bulkSMSUser = new BulkSMSUsers(h.get("username").toString(), h.get("password").toString(), h.get("objectId").toString(), h.get("sessionString").toString(), h.get("email").toString());
@@ -1702,7 +1853,10 @@ public class StateMachine extends StateMachineBase {
                         cmds[0] = new Command("yes") {
                             @Override
                             public void actionPerformed(ActionEvent evt) {
+
+                                Thread thread = new Thread(new smsClassToSend(), "thread" + String.valueOf(smsCount));
                                 thread.start();
+
                                 TextArea txt = new TextArea();
                                 txt.setText("your message is queued for sending");
                                 txt.setEditable(false);
@@ -1728,6 +1882,8 @@ public class StateMachine extends StateMachineBase {
                         Dialog.show("Please Confirm", area, cmds);
                     } else {
                         bulkSMSUser = new BulkSMSUsers(sender, h.get("password").toString(), h.get("objectId").toString(), h.get("sessionString").toString(), h.get("email").toString());
+
+                        Thread thread = new Thread(new smsClassToSend(), "thread" + String.valueOf(smsCount));
                         thread.start();
 
                         TextArea txt = new TextArea();
@@ -1754,7 +1910,7 @@ public class StateMachine extends StateMachineBase {
         f.addCommand(new Command("Close") {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                
+
                 Display.getInstance().exitApplication();
             }
         });
@@ -1762,7 +1918,7 @@ public class StateMachine extends StateMachineBase {
         f.setBackCommand(new Command("Close") {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                
+
                 Display.getInstance().exitApplication();
             }
         });
@@ -1852,5 +2008,4 @@ public class StateMachine extends StateMachineBase {
         group = "main";
         showForm("PhoneContacts", null);
     }
-
 }
