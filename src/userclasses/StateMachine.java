@@ -1754,7 +1754,7 @@ public class StateMachine extends StateMachineBase {
         f.addCommand(new Command("Close") {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                //super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                
                 Display.getInstance().exitApplication();
             }
         });
@@ -1762,7 +1762,7 @@ public class StateMachine extends StateMachineBase {
         f.setBackCommand(new Command("Close") {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                //super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                
                 Display.getInstance().exitApplication();
             }
         });
