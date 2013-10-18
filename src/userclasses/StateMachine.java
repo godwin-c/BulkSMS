@@ -1852,25 +1852,5 @@ public class StateMachine extends StateMachineBase {
         group = "main";
         showForm("PhoneContacts", null);
     }
-//    @Override
-//    protected boolean initListModelSmsContactsList(List cmp) {
-//        String[] contactsId = ContactsManager.getAllContactsWithNumbers();
-//        cmp.setModel(new ContactsModel(contactsId));
-//        return true;
-//    }
-//
-//    @Override
-//    protected void beforeContactsList(Form f) {
-//    }
-//
-//    @Override
-//    protected void onContactsList_DoneButtonAction(Component c, ActionEvent event) {
-//        ((Dialog) Display.getInstance().getCurrent()).dispose();
-//    }
-//
-//    @Override
-//    protected void onContactsList_SmsContactsListAction(Component c, ActionEvent event) {
-//        final List l = (List) c;
-//        final Hashtable h = (Hashtable) l.getSelectedItem();
-//    }
+
 }
