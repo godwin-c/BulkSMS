@@ -1879,8 +1879,7 @@ public class StateMachine extends StateMachineBase {
                                 //do Option2
                             }
                         };
-
-                        //Dialog.show("Confirm", "you haven't entered LOG URL", cmds, BACK_COMMAND_ID, null, 0);
+                
 
                         TextArea area = new TextArea();
                         //area.setUIID("VKBtooltip");
@@ -1944,9 +1943,9 @@ public class StateMachine extends StateMachineBase {
 
         userLogin(username.toLowerCase(), pwd);
         if ((status == null) || (!"200 OK".equals(status))) {
-            // ((Dialog) Display.getInstance().getCurrent()).dispose();
+            
             Dialog.show("user login", "please check your login details", "OK", null);
-            //noInternet();
+            
         } else {
             Dialog.show("user login", "welcome back '" + username + "', we missed you", "OK", null);
             loggedInUser.put("password", pwd);
@@ -1983,7 +1982,7 @@ public class StateMachine extends StateMachineBase {
                 }
             } else {
                 Dialog.show("Oh Dear", "your password reset was not successful. did you provide the correct email address?", "OK", null);
-                //noInternet();
+                
             }
         }
     }
