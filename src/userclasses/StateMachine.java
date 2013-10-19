@@ -1760,6 +1760,9 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected void beforeSplashScreen(Form f) {
         //Storage.getInstance().clearStorage();
+//        Image i = fetchResourceFile().getImage("SMS.png");
+//        Label l = findLabel1(f);
+//        l.setIcon(i.scaledWidth(Display.getInstance().getDisplayWidth() - 400));
     }
 
     @Override
@@ -1775,10 +1778,14 @@ public class StateMachine extends StateMachineBase {
 
         TextArea text = findInfoNumbersTextArea(f);
 
-        text.setText("Make payments to the following account number : \n"
+        text.setText("Make payments to any of the following account numbers : \n"
                 + "Agada Godwin C. \n"
                 + "Keystone Savings Acct \n"
                 + "6005446430 \n"
+                + "\n"
+                + "Agada Godwin C. \n"
+                + "GTBank Savings Acct \n"
+                + "0128223782 \n"
                 + "\n After payment, send a text message in this format \n"
                 + "'<username>' payed <amount> with slip number <number>");
 
